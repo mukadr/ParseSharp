@@ -145,5 +145,14 @@ namespace ParseSharp.Test
             Assert.Equal("a", parser.ParseToEnd("a"));
             Assert.Null(parser.ParseToEnd(""));
         }
+
+        [Fact]
+        public void Not_DoesNotAccept_NextParser()
+        {
+            var parser = Not(Match('a')).Bind(_ => Match('b'));
+
+            Assert.Equal("b", parser.ParseToEnd("b"));
+            Assert.Throws<ArgumentException>(() => parser.ParseToEnd("ab"));
+        }
     }
 }

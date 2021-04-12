@@ -79,5 +79,16 @@ namespace ParseSharp
 
         public static Parser<T?> Optional<T>(Parser<T> parser) where T : class
             => parser.Map(value => (T?)value).Or(Constant<T?>(null));
+
+        public static Parser<T?> Not<T>(Parser<T> parser) where T : class
+            => new Parser<T?>(input =>
+            {
+                var result = parser.Parse(input);
+                if (result is null)
+                {
+                    return new ParserResult<T?>(null, input);
+                }
+                return null;
+            });
     }
 }
