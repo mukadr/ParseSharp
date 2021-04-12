@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 using static ParseSharp.ParserFactory;
 
@@ -105,19 +106,27 @@ namespace ParseSharp.Test
         [Fact]
         public void OneOrMore_Accepts_RepeatedInput()
         {
-            var parser = OneOrMore(Match('0', '9'));
+            var stringParser = OneOrMore(Match('0', '9'));
+            var intParser = OneOrMore(Match('0', '9').Map(s => int.Parse(s)));
 
-            parser.ParseToEnd("2021");
-            Assert.Throws<ArgumentException>(() => parser.ParseToEnd(""));
+            Assert.Equal("2021", stringParser.ParseToEnd("2021"));
+            Assert.Equal(new List<int> { 2, 0, 2, 1 }, intParser.ParseToEnd("2021"));
+
+            Assert.Throws<ArgumentException>(() => stringParser.ParseToEnd(""));
+            Assert.Throws<ArgumentException>(() => intParser.ParseToEnd(""));
         }
 
         [Fact]
         public void ZeroOrMore_Accepts_RepeatedInput()
         {
-            var parser = ZeroOrMore(Match('0', '9'));
+            var stringParser = ZeroOrMore(Match('0', '9'));
+            var intParser = ZeroOrMore(Match('0', '9').Map(s => int.Parse(s)));
 
-            parser.ParseToEnd("2021");
-            parser.ParseToEnd("");
+            Assert.Equal("2021", stringParser.ParseToEnd("2021"));
+            Assert.Equal(new List<int> { 2, 0, 2, 1 }, intParser.ParseToEnd("2021"));
+
+            stringParser.ParseToEnd("");
+            intParser.ParseToEnd("");
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace ParseSharp
 {
@@ -19,6 +20,34 @@ namespace ParseSharp
 
         public static Parser<string> MatchUntil(string s, StringComparison comparisonType = StringComparison.Ordinal)
             => new Parser<string>(input => input.MatchUntil(s, comparisonType));
+
+        public static Parser<string> OneOrMore(Parser<string> parser)
+            => new Parser<string>(input =>
+            {
+                var sb = new StringBuilder();
+
+                var result = parser.Parse(input);
+                if (result is null)
+                {
+                    return null;
+                }
+
+                while (true)
+                {
+                    sb.Append(result.Value);
+                    input = result.Input;
+                    result = parser.Parse(input);
+                    if (result is null)
+                    {
+                        break;
+                    }
+                }
+
+                return new ParserResult<string>(sb.ToString(), input);
+            });
+
+        public static Parser<string> ZeroOrMore(Parser<string> parser)
+            => OneOrMore(parser).Or(Constant<string>(string.Empty));
 
         public static Parser<IList<T>> OneOrMore<T>(Parser<T> parser)
             => new Parser<IList<T>>(input =>
