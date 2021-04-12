@@ -84,14 +84,8 @@ namespace ParseSharp
                 var sb = new StringBuilder();
 
                 ParserResult<T>? result;
-                while (true)
+                while ((result = parser.Parse(input)) is null)
                 {
-                    result = parser.Parse(input);
-                    if (result is not null)
-                    {
-                        break;
-                    }
-
                     var ch = input.NextChar();
                     if (ch is null)
                     {
