@@ -136,5 +136,14 @@ namespace ParseSharp.Test
 
             Assert.Equal("ac", parser.ParseToEnd("abc"));
         }
+
+        [Fact]
+        public void Optional_Accepts_Input()
+        {
+            var parser = Optional(Match('a'));
+
+            Assert.Equal("a", parser.ParseToEnd("a"));
+            Assert.Null(parser.ParseToEnd(""));
+        }
     }
 }

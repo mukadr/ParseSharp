@@ -76,5 +76,8 @@ namespace ParseSharp
 
         public static Parser<IList<T>> ZeroOrMore<T>(Parser<T> parser)
             => OneOrMore(parser).Or(Constant<IList<T>>(new List<T>()));
+
+        public static Parser<T?> Optional<T>(Parser<T> parser) where T : class
+            => parser.Map(value => (T?)value).Or(Constant<T?>(null));
     }
 }
