@@ -31,9 +31,11 @@ namespace ParseSharp.Test
 
             var matchByChar = makeParser(ZeroOrMore(Match('\n')));
             var matchByString = makeParser(ZeroOrMore(Match("\n")));
+            var untilParser = Until(Match('x')).Map((_, pos) => pos).Skip(ZeroOrMore(Match('\n')));
 
             Assert.Equal(5, matchByChar.ParseToEnd(source).Line);
             Assert.Equal(5, matchByString.ParseToEnd(source).Line);
+            Assert.Equal(5, untilParser.ParseToEnd(source).Line);
         }
 
         [Fact]
@@ -157,7 +159,10 @@ namespace ParseSharp.Test
         [Fact]
         public void Until_Accepts_UpToNextParser()
         {
-            Assert.Equal("123", Until(Match('a').And(Match('b').And(Match('c')))).ParseToEnd("123abc"));
+            var result = Until(Match('a').Bind(a => Match('b').Bind(b => Match('c').Map(c => a + b + c)))).ParseToEnd("123abc");
+
+            Assert.Equal("123", result.Prefix);
+            Assert.Equal("abc", result.End);
         }
     }
 }

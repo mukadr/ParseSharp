@@ -88,8 +88,8 @@ namespace ParseSharp
                 return null;
             });
 
-        public static Parser<string> Until<T>(Parser<T> parser)
-            => new Parser<string>(input =>
+        public static Parser<(string Prefix, T End)> Until<T>(Parser<T> parser)
+            => new Parser<(string Prefix, T End)>(input =>
             {
                 var sb = new StringBuilder();
 
@@ -110,7 +110,7 @@ namespace ParseSharp
                     sb.Append(ch);
                 }
 
-                return new ParserResult<string>(sb.ToString(), result.Input);
+                return new ParserResult<(string Prefix, T End)>((sb.ToString(), result.Value), result.Input);
             });
     }
 }
