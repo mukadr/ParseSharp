@@ -128,5 +128,13 @@ namespace ParseSharp.Test
             stringParser.ParseToEnd("");
             intParser.ParseToEnd("");
         }
+
+        [Fact]
+        public void Skip_Accepts_Input()
+        {
+            var parser = Match('a').Skip(Match('b')).Bind(a => Match('c').Map(c => a + c));
+
+            Assert.Equal("ac", parser.ParseToEnd("abc"));
+        }
     }
 }

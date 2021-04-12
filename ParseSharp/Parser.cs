@@ -56,5 +56,23 @@ namespace ParseSharp
                 }
                 return nextParser.Parse(result.Input);
             });
+
+        public Parser<T> Skip<U>(Parser<U> next)
+            => new Parser<T>(input =>
+            {
+                var result = Parse(input);
+                if (result is null)
+                {
+                    return result;
+                }
+
+                var consumed = next.Parse(result.Input);
+                if (consumed is null)
+                {
+                    return result;
+                }
+
+                return new ParserResult<T>(result.Value, consumed.Input);
+            });
     }
 }
