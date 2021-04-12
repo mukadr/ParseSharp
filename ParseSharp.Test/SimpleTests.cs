@@ -5,7 +5,7 @@ using static ParseSharp.ParserFactory;
 
 namespace ParseSharp.Test
 {
-    public class SimpleParsingTests
+    public class SimpleTests
     {
         [Fact]
         public void Parser_Throws_OnMatchFailure()
