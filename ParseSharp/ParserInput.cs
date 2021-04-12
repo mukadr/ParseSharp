@@ -43,9 +43,9 @@ namespace ParseSharp
 
         private ParserResult<string> CreateParserResult(string lexeme)
         {
-            var lineCount = lexeme.Count(c => c == '\n');
-            var text = new ParserInput(_text, Position.Advance(lexeme.Length, lineCount));
-            return new ParserResult<string>(lexeme, text);
+            var newLineCount = lexeme.Count(c => c == '\n');
+            var input = new ParserInput(_text, Position.Advance(lexeme.Length, newLineCount));
+            return new ParserResult<string>(lexeme, input);
         }
 
         internal char? NextChar()

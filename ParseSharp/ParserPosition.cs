@@ -14,6 +14,6 @@ namespace ParseSharp
             Line = line;
         }
 
-        public ParserPosition Advance(int indexCount, int lineCount) => new ParserPosition(Index + indexCount, Line + lineCount);
+        public ParserPosition Advance(int charCount, int newLineCount) => new ParserPosition(Index + charCount, Line + newLineCount);
     }
 }
