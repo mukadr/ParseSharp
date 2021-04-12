@@ -44,5 +44,8 @@ namespace ParseSharp
 
                 return new ParserResult<IList<T>>(list, input);
             });
+
+        public static Parser<IList<T>> ZeroOrMore<T>(Parser<T> parser)
+            => OneOrMore(parser).Or(Constant<IList<T>>(new List<T>()));
     }
 }

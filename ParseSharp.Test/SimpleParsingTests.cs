@@ -108,6 +108,16 @@ namespace ParseSharp.Test
             var parser = OneOrMore(Match('0', '9'));
 
             parser.ParseToEnd("2021");
+            Assert.Throws<ArgumentException>(() => parser.ParseToEnd(""));
+        }
+
+        [Fact]
+        public void ZeroOrMore_Accepts_RepeatedInput()
+        {
+            var parser = ZeroOrMore(Match('0', '9'));
+
+            parser.ParseToEnd("2021");
+            parser.ParseToEnd("");
         }
     }
 }
