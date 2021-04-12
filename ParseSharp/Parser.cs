@@ -46,8 +46,8 @@ namespace ParseSharp
                 return result;
             });
 
-        public Parser<T> And(Parser<T> nextParser)
-            => new Parser<T>(input =>
+        public Parser<U> And<U>(Parser<U> nextParser)
+            => new Parser<U>(input =>
             {
                 var result = Parse(input);
                 if (result is null)
