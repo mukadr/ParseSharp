@@ -11,7 +11,7 @@ namespace ParseSharp
             Parse = parseFunc;
         }
 
-        public T ParseToEnd(string text)
+        public T ParseAllText(string text)
         {
             var result = Parse(new ParserInput(text));
             if (result is null || !result.Input.IsEndOfInput)

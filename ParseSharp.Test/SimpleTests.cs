@@ -10,15 +10,15 @@ namespace ParseSharp.Test
         [Fact]
         public void Parser_Throws_OnMatchFailure()
         {
-            Assert.Throws<ArgumentException>(() => Match('a').ParseToEnd("x"));
-            Assert.Throws<ArgumentException>(() => Match("a").ParseToEnd("x"));
+            Assert.Throws<ArgumentException>(() => Match('a').ParseAllText("x"));
+            Assert.Throws<ArgumentException>(() => Match("a").ParseAllText("x"));
         }
 
         [Fact]
         public void Parser_Throws_WhenNotCompleted()
         {
-            Assert.Throws<ArgumentException>(() => Match('a').ParseToEnd("ab"));
-            Assert.Throws<ArgumentException>(() => Match("a").ParseToEnd("ab"));
+            Assert.Throws<ArgumentException>(() => Match('a').ParseAllText("ab"));
+            Assert.Throws<ArgumentException>(() => Match("a").ParseAllText("ab"));
         }
 
         [Fact]
@@ -33,15 +33,15 @@ namespace ParseSharp.Test
             var matchString = makeParser(ZeroOrMore(Match("\n")));
             var matchUntil = Until(Match('x')).Map((_, pos) => pos).Skip(ZeroOrMore(Match('\n')));
 
-            Assert.Equal(5, matchChar.ParseToEnd(source).Line);
-            Assert.Equal(5, matchString.ParseToEnd(source).Line);
-            Assert.Equal(5, matchUntil.ParseToEnd(source).Line);
+            Assert.Equal(5, matchChar.ParseAllText(source).Line);
+            Assert.Equal(5, matchString.ParseAllText(source).Line);
+            Assert.Equal(5, matchUntil.ParseAllText(source).Line);
         }
 
         [Fact]
         public void Match_Accepts_Character()
         {
-            Match('a').ParseToEnd("a");
+            Match('a').ParseAllText("a");
         }
 
         [Fact]
@@ -51,32 +51,32 @@ namespace ParseSharp.Test
 
             for (var c = 'a'; c <= 'z'; c++)
             {
-                parser.ParseToEnd(c.ToString());
+                parser.ParseAllText(c.ToString());
             }
         }
 
         [Fact]
         public void Match_Accepts_String()
         {
-            Match("Hello").ParseToEnd("Hello");
+            Match("Hello").ParseAllText("Hello");
         }
 
         [Fact]
         public void Match_Accepts_StringIgnoreCase()
         {
-            Match("HelloWorld", StringComparison.OrdinalIgnoreCase).ParseToEnd("HELLOWORLD");
+            Match("HelloWorld", StringComparison.OrdinalIgnoreCase).ParseAllText("HELLOWORLD");
         }
 
         [Fact]
         public void Constant_Returns_Value()
         {
-            Assert.Equal(3, Constant(3).ParseToEnd(""));
+            Assert.Equal(3, Constant(3).ParseAllText(""));
         }
 
         [Fact]
         public void Bind_Executes_NextParser()
         {
-            Match('0', '9').Bind(n => Match('h')).ParseToEnd("5h");
+            Match('0', '9').Bind(n => Match('h')).ParseAllText("5h");
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace ParseSharp.Test
         {
             var parser = Match('0', '9').Map(v => int.Parse(v));
 
-            Assert.Equal(5, parser.ParseToEnd("5"));
+            Assert.Equal(5, parser.ParseAllText("5"));
         }
 
         [Fact]
@@ -92,8 +92,8 @@ namespace ParseSharp.Test
         {
             var parser = Match("a").Or(Match("b"));
 
-            Assert.Equal("a", parser.ParseToEnd("a"));
-            Assert.Equal("b", parser.ParseToEnd("b"));
+            Assert.Equal("a", parser.ParseAllText("a"));
+            Assert.Equal("b", parser.ParseAllText("b"));
         }
 
         [Fact]
@@ -101,9 +101,9 @@ namespace ParseSharp.Test
         {
             var parser = Match("a").And(Match("b"));
 
-            Assert.Throws<ArgumentException>(() => parser.ParseToEnd("a"));
-            Assert.Throws<ArgumentException>(() => parser.ParseToEnd("b"));
-            Assert.Equal("b", parser.ParseToEnd("ab"));
+            Assert.Throws<ArgumentException>(() => parser.ParseAllText("a"));
+            Assert.Throws<ArgumentException>(() => parser.ParseAllText("b"));
+            Assert.Equal("b", parser.ParseAllText("ab"));
         }
 
         [Fact]
@@ -112,14 +112,14 @@ namespace ParseSharp.Test
             var stringParser = OneOrMore(Match('0', '9'));
             var intParser = OneOrMore(Match('0', '9').Map(s => int.Parse(s)));
 
-            Assert.Equal("2021", stringParser.ParseToEnd("2021"));
-            Assert.Equal(new List<int> { 2, 0, 2, 1 }, intParser.ParseToEnd("2021"));
+            Assert.Equal("2021", stringParser.ParseAllText("2021"));
+            Assert.Equal(new List<int> { 2, 0, 2, 1 }, intParser.ParseAllText("2021"));
         }
 
         [Fact]
         public void OneOrMore_Rejects_MissingInput()
         {
-            Assert.Throws<ArgumentException>(() => OneOrMore(Match('x')).ParseToEnd(""));
+            Assert.Throws<ArgumentException>(() => OneOrMore(Match('x')).ParseAllText(""));
         }
 
         [Fact]
@@ -128,14 +128,14 @@ namespace ParseSharp.Test
             var stringParser = ZeroOrMore(Match('0', '9'));
             var intParser = ZeroOrMore(Match('0', '9').Map(s => int.Parse(s)));
 
-            Assert.Equal("2021", stringParser.ParseToEnd("2021"));
-            Assert.Equal(new List<int> { 2, 0, 2, 1 }, intParser.ParseToEnd("2021"));
+            Assert.Equal("2021", stringParser.ParseAllText("2021"));
+            Assert.Equal(new List<int> { 2, 0, 2, 1 }, intParser.ParseAllText("2021"));
         }
 
         [Fact]
         public void ZeroOrMore_Accepts_MissingInput()
         {
-            Assert.NotNull(ZeroOrMore(Match('x')).ParseToEnd(""));
+            Assert.NotNull(ZeroOrMore(Match('x')).ParseAllText(""));
         }
 
         [Fact]
@@ -143,7 +143,7 @@ namespace ParseSharp.Test
         {
             var parser = Match('a').Skip(Match('b')).Bind(a => Match('c').Map(c => a + c));
 
-            Assert.Equal("ac", parser.ParseToEnd("abc"));
+            Assert.Equal("ac", parser.ParseAllText("abc"));
         }
 
         [Fact]
@@ -151,7 +151,7 @@ namespace ParseSharp.Test
         {
             var parser = Optional(Match('a'));
 
-            Assert.Equal("a", parser.ParseToEnd("a"));
+            Assert.Equal("a", parser.ParseAllText("a"));
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace ParseSharp.Test
         {
             var parser = Optional(Match('a'));
 
-            Assert.Null(parser.ParseToEnd(""));
+            Assert.Null(parser.ParseAllText(""));
         }
 
         [Fact]
@@ -167,14 +167,14 @@ namespace ParseSharp.Test
         {
             var parser = Not(Match('a')).Bind(_ => Match('b'));
 
-            Assert.Equal("b", parser.ParseToEnd("b"));
-            Assert.Throws<ArgumentException>(() => parser.ParseToEnd("ab"));
+            Assert.Equal("b", parser.ParseAllText("b"));
+            Assert.Throws<ArgumentException>(() => parser.ParseAllText("ab"));
         }
 
         [Fact]
         public void Until_Accepts_WhenEndIsFound()
         {
-            var result = Until(Match('a').Bind(a => Match('b').Bind(b => Match('c').Map(c => a + b + c)))).ParseToEnd("123abc");
+            var result = Until(Match('a').Bind(a => Match('b').Bind(b => Match('c').Map(c => a + b + c)))).ParseAllText("123abc");
 
             Assert.Equal("123", result.Prefix);
             Assert.Equal("abc", result.End);
