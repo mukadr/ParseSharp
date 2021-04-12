@@ -16,7 +16,7 @@ namespace ParseSharp
             var result = Parse(new ParserInput(text));
             if (result is null || !result.Input.IsEndOfInput)
             {
-                throw new ArgumentException("Input text did not match.");
+                throw new ParserException("Input text did not match.");
             }
             return result.Value;
         }

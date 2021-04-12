@@ -10,15 +10,15 @@ namespace ParseSharp.Test
         [Fact]
         public void Parser_Throws_OnMatchFailure()
         {
-            Assert.Throws<ArgumentException>(() => Match('a').ParseAllText("x"));
-            Assert.Throws<ArgumentException>(() => Match("a").ParseAllText("x"));
+            Assert.Throws<ParserException>(() => Match('a').ParseAllText("x"));
+            Assert.Throws<ParserException>(() => Match("a").ParseAllText("x"));
         }
 
         [Fact]
         public void Parser_Throws_WhenNotCompleted()
         {
-            Assert.Throws<ArgumentException>(() => Match('a').ParseAllText("ab"));
-            Assert.Throws<ArgumentException>(() => Match("a").ParseAllText("ab"));
+            Assert.Throws<ParserException>(() => Match('a').ParseAllText("ab"));
+            Assert.Throws<ParserException>(() => Match("a").ParseAllText("ab"));
         }
 
         [Fact]
@@ -101,8 +101,8 @@ namespace ParseSharp.Test
         {
             var parser = Match("a").And(Match("b"));
 
-            Assert.Throws<ArgumentException>(() => parser.ParseAllText("a"));
-            Assert.Throws<ArgumentException>(() => parser.ParseAllText("b"));
+            Assert.Throws<ParserException>(() => parser.ParseAllText("a"));
+            Assert.Throws<ParserException>(() => parser.ParseAllText("b"));
             Assert.Equal("b", parser.ParseAllText("ab"));
         }
 
@@ -119,7 +119,7 @@ namespace ParseSharp.Test
         [Fact]
         public void OneOrMore_Rejects_MissingInput()
         {
-            Assert.Throws<ArgumentException>(() => OneOrMore(Match('x')).ParseAllText(""));
+            Assert.Throws<ParserException>(() => OneOrMore(Match('x')).ParseAllText(""));
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace ParseSharp.Test
             var parser = Not(Match('a')).Bind(_ => Match('b'));
 
             Assert.Equal("b", parser.ParseAllText("b"));
-            Assert.Throws<ArgumentException>(() => parser.ParseAllText("ab"));
+            Assert.Throws<ParserException>(() => parser.ParseAllText("ab"));
         }
 
         [Fact]
