@@ -13,7 +13,6 @@ namespace ParseSharp.Test
             Assert.Throws<ArgumentException>(() => Match('a').ParseToEnd("x"));
             Assert.Throws<ArgumentException>(() => Match('a', 'f').ParseToEnd("x"));
             Assert.Throws<ArgumentException>(() => Match("a").ParseToEnd("x"));
-            Assert.Throws<ArgumentException>(() => MatchUntil("a").ParseToEnd("x"));
         }
 
         [Fact]
@@ -22,7 +21,6 @@ namespace ParseSharp.Test
             Assert.Throws<ArgumentException>(() => Match('a').ParseToEnd("ab"));
             Assert.Throws<ArgumentException>(() => Match('a', 'f').ParseToEnd("ab"));
             Assert.Throws<ArgumentException>(() => Match("a").ParseToEnd("ab"));
-            Assert.Throws<ArgumentException>(() => MatchUntil("a").ParseToEnd("ab"));
         }
 
         [Fact]
@@ -69,18 +67,6 @@ namespace ParseSharp.Test
         public void Match_Accepts_StringIgnoreCase()
         {
             Match("HelloWorld", StringComparison.OrdinalIgnoreCase).ParseToEnd("HELLOWORLD");
-        }
-
-        [Fact]
-        public void MatchUntil_Accepts_UpToTerminator()
-        {
-            Assert.Equal("123", MatchUntil("abc").ParseToEnd("123abc"));
-        }
-
-        [Fact]
-        public void MatchUntil_Accepts_UpToTerminatorIgnoreCase()
-        {
-            Assert.Equal("123", MatchUntil("abc", StringComparison.OrdinalIgnoreCase).ParseToEnd("123ABC"));
         }
 
         [Fact]
@@ -170,6 +156,12 @@ namespace ParseSharp.Test
 
             Assert.Equal("b", parser.ParseToEnd("b"));
             Assert.Throws<ArgumentException>(() => parser.ParseToEnd("ab"));
+        }
+
+        [Fact]
+        public void Until_Accepts_UpToNextParser()
+        {
+            Assert.Equal("123", Until(Match('a').And(Match('b').And(Match('c')))).ParseToEnd("123abc"));
         }
     }
 }

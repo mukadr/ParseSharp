@@ -18,9 +18,6 @@ namespace ParseSharp
         public static Parser<string> Match(string s, StringComparison comparisonType = StringComparison.Ordinal)
             => new Parser<string>(input => input.Match(s, comparisonType));
 
-        public static Parser<string> MatchUntil(string s, StringComparison comparisonType = StringComparison.Ordinal)
-            => new Parser<string>(input => input.MatchUntil(s, comparisonType));
-
         public static Parser<string> OneOrMore(Parser<string> parser)
             => new Parser<string>(input =>
             {
@@ -89,6 +86,31 @@ namespace ParseSharp
                     return new ParserResult<T?>(null, input);
                 }
                 return null;
+            });
+
+        public static Parser<string> Until<T>(Parser<T> parser)
+            => new Parser<string>(input =>
+            {
+                var sb = new StringBuilder();
+
+                ParserResult<T>? result;
+                while (true)
+                {
+                    result = parser.Parse(input);
+                    if (result is not null)
+                    {
+                        break;
+                    }
+
+                    var ch = input.NextChar();
+                    if (ch is null)
+                    {
+                        return null;
+                    }
+                    sb.Append(ch);
+                }
+
+                return new ParserResult<string>(sb.ToString(), result.Input);
             });
     }
 }
