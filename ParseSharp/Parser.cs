@@ -32,8 +32,22 @@ namespace ParseSharp
                 return nextParser(result.Value).Parse(result.Input);
             });
 
+        public Parser<U> Bind<U>(Func<T, ParserPosition, Parser<U>> nextParser)
+            => new Parser<U>(input =>
+            {
+                var result = Parse(input);
+                if (result is null)
+                {
+                    return null;
+                }
+                return nextParser(result.Value, result.Input.Position).Parse(result.Input);
+            });
+
         public Parser<U> Map<U>(Func<T, U> map)
             => Bind(v => ParserFactory.Constant<U>(map(v)));
+
+        public Parser<U> Map<U>(Func<T, ParserPosition, U> map)
+            => Bind((v, pos) => ParserFactory.Constant<U>(map(v, pos)));
 
         public Parser<T> Or(Parser<T> nextParser)
             => new Parser<T>(input =>

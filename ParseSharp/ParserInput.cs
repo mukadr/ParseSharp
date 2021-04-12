@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace ParseSharp
 {
@@ -23,7 +24,7 @@ namespace ParseSharp
                 _text[Position.Index] <= last)
             {
                 var lexeme = _text[Position.Index].ToString();
-                var text = new ParserInput(_text, Position.Advance(1));
+                var text = new ParserInput(_text, Position.Advance(1, lexeme == "\n" ? 1 : 0));
                 return new ParserResult<string>(lexeme, text);
             }
             return null;
@@ -37,7 +38,8 @@ namespace ParseSharp
                 if (index >= 0)
                 {
                     var lexeme = _text.Substring(Position.Index, s.Length);
-                    var text = new ParserInput(_text, Position.Advance(s.Length));
+                    var lineCount = lexeme.Count(c => c == '\n');
+                    var text = new ParserInput(_text, Position.Advance(s.Length, lineCount));
                     return new ParserResult<string>(lexeme, text);
                 }
             }
@@ -52,7 +54,8 @@ namespace ParseSharp
                 if (index >= 0)
                 {
                     var lexeme = _text.Substring(Position.Index, index - Position.Index);
-                    var text = new ParserInput(_text, new ParserPosition(index + s.Length));
+                    var lineCount = lexeme.Count(c => c == '\n');
+                    var text = new ParserInput(_text, new ParserPosition(index + s.Length, lineCount));
                     return new ParserResult<string>(lexeme, text);
                 }
             }

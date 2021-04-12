@@ -26,6 +26,24 @@ namespace ParseSharp.Test
         }
 
         [Fact]
+        public void Parser_Counts_LineNumber()
+        {
+            var whitespace =
+                ZeroOrMore(
+                    Match(' ')
+                    .Or(Match('\t'))
+                    .Or(Match('\n'))
+                    .Or(Match('\r')));
+
+            var parser =
+                whitespace
+                .And(Match("foo").Map((_, pos) => pos))
+                .Skip(whitespace);
+
+            Assert.Equal(4, parser.ParseToEnd("\n\n\nfoo\n\n").Line);
+        }
+
+        [Fact]
         public void Match_Accepts_Character()
         {
             Match('a').ParseToEnd("a");
