@@ -32,8 +32,8 @@ namespace ParseSharp
                 return nextParser(result.Value).Parse(result.Input);
             });
 
-        public Parser<U> Map<U>(Func<T, U> mapFunc)
-            => Bind(v => ParserFactory.Constant<U>(mapFunc(v)));
+        public Parser<U> Map<U>(Func<T, U> map)
+            => Bind(v => ParserFactory.Constant<U>(map(v)));
 
         public Parser<T> Or(Parser<T> nextParser)
             => new Parser<T>(input =>
