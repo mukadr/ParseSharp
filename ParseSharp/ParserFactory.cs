@@ -29,16 +29,11 @@ namespace ParseSharp
                     return null;
                 }
 
-                while (true)
+                do
                 {
                     sb.Append(result.Value);
                     input = result.Input;
-                    result = parser.Parse(input);
-                    if (result is null)
-                    {
-                        break;
-                    }
-                }
+                } while ((result = parser.Parse(input)) is not null);
 
                 return new ParserResult<string>(sb.ToString(), input);
             });
@@ -57,16 +52,11 @@ namespace ParseSharp
                     return null;
                 }
 
-                while (true)
+                do
                 {
                     list.Add(result.Value);
                     input = result.Input;
-                    result = parser.Parse(input);
-                    if (result is null)
-                    {
-                        break;
-                    }
-                }
+                } while ((result = parser.Parse(input)) is not null);
 
                 return new ParserResult<IList<T>>(list, input);
             });
