@@ -6,24 +6,24 @@ namespace ParseSharp
     {
         private readonly string _text;
 
-        internal readonly ParserPosition _position;
+        internal readonly ParserPosition Position { get; }
 
-        internal bool IsEndOfInput => _position.Index >= _text.Length;
+        internal bool IsEndOfInput => Position.Index >= _text.Length;
 
         internal ParserInput(string text, ParserPosition? position = null)
         {
             _text = text;
-            _position = position ?? ParserPosition.Start;
+            Position = position ?? ParserPosition.Start;
         }
 
         internal ParserResult<string>? Match(char first, char last)
         {
-            if (_position.Index < _text.Length &&
-                _text[_position.Index] >= first &&
-                _text[_position.Index] <= last)
+            if (Position.Index < _text.Length &&
+                _text[Position.Index] >= first &&
+                _text[Position.Index] <= last)
             {
-                var lexeme = _text[_position.Index].ToString();
-                var text = new ParserInput(_text, _position.Advance(1));
+                var lexeme = _text[Position.Index].ToString();
+                var text = new ParserInput(_text, Position.Advance(1));
                 return new ParserResult<string>(lexeme, text);
             }
             return null;
@@ -31,13 +31,13 @@ namespace ParseSharp
 
         internal ParserResult<string>? Match(string s, StringComparison comparisonType)
         {
-            if (_position.Index < _text.Length)
+            if (Position.Index < _text.Length)
             {
-                var index = _text.IndexOf(s, _position.Index, comparisonType);
+                var index = _text.IndexOf(s, Position.Index, comparisonType);
                 if (index >= 0)
                 {
-                    var lexeme = _text.Substring(_position.Index, s.Length);
-                    var text = new ParserInput(_text, _position.Advance(s.Length));
+                    var lexeme = _text.Substring(Position.Index, s.Length);
+                    var text = new ParserInput(_text, Position.Advance(s.Length));
                     return new ParserResult<string>(lexeme, text);
                 }
             }
@@ -46,12 +46,12 @@ namespace ParseSharp
 
         internal ParserResult<string>? MatchUntil(string s, StringComparison comparisonType)
         {
-            if (_position.Index < _text.Length)
+            if (Position.Index < _text.Length)
             {
-                var index = _text.IndexOf(s, _position.Index, comparisonType);
+                var index = _text.IndexOf(s, Position.Index, comparisonType);
                 if (index >= 0)
                 {
-                    var lexeme = _text.Substring(_position.Index, index - _position.Index);
+                    var lexeme = _text.Substring(Position.Index, index - Position.Index);
                     var text = new ParserInput(_text, new ParserPosition(index + s.Length));
                     return new ParserResult<string>(lexeme, text);
                 }
