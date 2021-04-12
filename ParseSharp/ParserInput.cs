@@ -23,9 +23,7 @@ namespace ParseSharp
                 _text[Position.Index] >= first &&
                 _text[Position.Index] <= last)
             {
-                var lexeme = _text[Position.Index].ToString();
-                var text = new ParserInput(_text, Position.Advance(1, lexeme == "\n" ? 1 : 0));
-                return new ParserResult<string>(lexeme, text);
+                return CreateParserResult(_text[Position.Index].ToString());
             }
             return null;
         }
@@ -37,12 +35,17 @@ namespace ParseSharp
                 var lexeme = _text.Substring(Position.Index, s.Length);
                 if (lexeme.Equals(s, comparisonType))
                 {
-                    var lineCount = lexeme.Count(c => c == '\n');
-                    var text = new ParserInput(_text, Position.Advance(s.Length, lineCount));
-                    return new ParserResult<string>(lexeme, text);
+                    return CreateParserResult(lexeme);
                 }
             }
             return null;
+        }
+
+        private ParserResult<string> CreateParserResult(string lexeme)
+        {
+            var lineCount = lexeme.Count(c => c == '\n');
+            var text = new ParserInput(_text, Position.Advance(lexeme.Length, lineCount));
+            return new ParserResult<string>(lexeme, text);
         }
 
         internal char? NextChar()
