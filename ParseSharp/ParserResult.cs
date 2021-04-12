@@ -1,6 +1,6 @@
 namespace ParseSharp
 {
-    internal struct ParserResult<T>
+    internal class ParserResult<T>
     {
         internal T Value { get; }
 

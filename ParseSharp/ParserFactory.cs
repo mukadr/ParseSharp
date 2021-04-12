@@ -33,8 +33,8 @@ namespace ParseSharp
 
                 while (true)
                 {
-                    list.Add(result.Value.Value);
-                    input = result.Value.Input;
+                    list.Add(result.Value);
+                    input = result.Input;
                     result = parser.Parse(input);
                     if (result is null)
                     {
