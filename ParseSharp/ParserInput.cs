@@ -32,7 +32,7 @@ namespace ParseSharp
 
         internal ParserResult<string>? Match(string s, StringComparison comparisonType)
         {
-            if (Position.Index < _text.Length + s.Length - 1)
+            if (Position.Index < _text.Length - s.Length + 1)
             {
                 var lexeme = _text.Substring(Position.Index, s.Length);
                 if (lexeme.Equals(s, comparisonType))
