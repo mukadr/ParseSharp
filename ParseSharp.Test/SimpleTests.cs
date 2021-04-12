@@ -11,7 +11,6 @@ namespace ParseSharp.Test
         public void Parser_Throws_OnMatchFailure()
         {
             Assert.Throws<ArgumentException>(() => Match('a').ParseToEnd("x"));
-            Assert.Throws<ArgumentException>(() => Match('a', 'f').ParseToEnd("x"));
             Assert.Throws<ArgumentException>(() => Match("a").ParseToEnd("x"));
         }
 
@@ -19,7 +18,6 @@ namespace ParseSharp.Test
         public void Parser_Throws_WhenNotCompleted()
         {
             Assert.Throws<ArgumentException>(() => Match('a').ParseToEnd("ab"));
-            Assert.Throws<ArgumentException>(() => Match('a', 'f').ParseToEnd("ab"));
             Assert.Throws<ArgumentException>(() => Match("a").ParseToEnd("ab"));
         }
 
@@ -32,11 +30,9 @@ namespace ParseSharp.Test
                 => newLineParser.And(Match('x').Map((_, pos) => pos)).Skip(newLineParser);
 
             var matchByChar = makeParser(ZeroOrMore(Match('\n')));
-            var matchByCharRange = makeParser(ZeroOrMore(Match('\n', '\n')));
             var matchByString = makeParser(ZeroOrMore(Match("\n")));
 
             Assert.Equal(5, matchByChar.ParseToEnd(source).Line);
-            Assert.Equal(5, matchByCharRange.ParseToEnd(source).Line);
             Assert.Equal(5, matchByString.ParseToEnd(source).Line);
         }
 
