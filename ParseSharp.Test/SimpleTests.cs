@@ -26,21 +26,20 @@ namespace ParseSharp.Test
         }
 
         [Fact]
-        public void Parser_Counts_LineNumber()
+        public void Match_Counts_LineNumber()
         {
-            var whitespace =
-                ZeroOrMore(
-                    Match(' ')
-                    .Or(Match('\t'))
-                    .Or(Match('\n'))
-                    .Or(Match('\r')));
+            const string source = "\n\n\n\nx\n\n";
 
-            var parser =
-                whitespace
-                .And(Match("foo").Map((_, pos) => pos))
-                .Skip(whitespace);
+            Parser<ParserPosition> makeParser(Parser<string> newLineParser)
+                => newLineParser.And(Match('x').Map((_, pos) => pos)).Skip(newLineParser);
 
-            Assert.Equal(4, parser.ParseToEnd("\n\n\nfoo\n\n").Line);
+            var matchByChar = makeParser(ZeroOrMore(Match('\n')));
+            var matchByCharRange = makeParser(ZeroOrMore(Match('\n', '\n')));
+            var matchByString = makeParser(ZeroOrMore(Match("\n")));
+
+            Assert.Equal(5, matchByChar.ParseToEnd(source).Line);
+            Assert.Equal(5, matchByCharRange.ParseToEnd(source).Line);
+            Assert.Equal(5, matchByString.ParseToEnd(source).Line);
         }
 
         [Fact]

@@ -32,12 +32,11 @@ namespace ParseSharp
 
         internal ParserResult<string>? Match(string s, StringComparison comparisonType)
         {
-            if (Position.Index < _text.Length)
+            if (Position.Index < _text.Length + s.Length - 1)
             {
-                var index = _text.IndexOf(s, Position.Index, comparisonType);
-                if (index >= 0)
+                var lexeme = _text.Substring(Position.Index, s.Length);
+                if (lexeme.Equals(s, comparisonType))
                 {
-                    var lexeme = _text.Substring(Position.Index, s.Length);
                     var lineCount = lexeme.Count(c => c == '\n');
                     var text = new ParserInput(_text, Position.Advance(s.Length, lineCount));
                     return new ParserResult<string>(lexeme, text);
