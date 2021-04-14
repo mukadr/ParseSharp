@@ -1,5 +1,5 @@
 using System.Linq;
-using static ParseSharp.ParserFactory;
+using static ParseSharp.Parser;
 
 namespace ParseSharp.Test.CSharp
 {

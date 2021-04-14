@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
-using static ParseSharp.ParserFactory;
+using static ParseSharp.Parser;
 
 namespace ParseSharp.Test
 {
