@@ -27,7 +27,20 @@ namespace ParseSharp.Test.CSharp
         {
             var ast = _Parser.ParseAllText("10 + 3 * 5");
 
-            Assert.IsType<BinExpression>(ast);
+            var bin = Assert.IsType<BinExpression>(ast);
+            Assert.Equal("+", bin.Op);
+
+            var left = Assert.IsType<IntExpression>(bin.Left);
+            Assert.Equal(10, left.Value);
+
+            var binRight = Assert.IsType<BinExpression>(bin.Right);
+            Assert.Equal("*", binRight.Op);
+
+            var middle = Assert.IsType<IntExpression>(binRight.Left);
+            Assert.Equal(3, middle.Value);
+
+            var right = Assert.IsType<IntExpression>(binRight.Right);
+            Assert.Equal(5, right.Value);
         }
     }
 }
