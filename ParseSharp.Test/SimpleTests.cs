@@ -26,11 +26,8 @@ namespace ParseSharp.Test
         {
             const string source = "\n\n\n\nx\n\n";
 
-            Parser<ParserPosition> makeParser(Parser<string> newLineParser)
-                => newLineParser.And(Match('x').Map((_, pos) => pos)).Skip(newLineParser);
-
-            var matchChar = makeParser(ZeroOrMore(Match('\n')));
-            var matchString = makeParser(ZeroOrMore(Match("\n")));
+            var matchChar = ZeroOrMore(Match('\n')).And(Match('x').Map((_, pos) => pos)).Skip(ZeroOrMore(Match('\n')));
+            var matchString = ZeroOrMore(Match("\n")).And(Match("x").Map((_, pos) => pos)).Skip(ZeroOrMore(Match("\n")));
             var matchUntil = Until(Match('x')).Map((_, pos) => pos).Skip(ZeroOrMore(Match('\n')));
 
             Assert.Equal(5, matchChar.ParseAllText(source).Line);
