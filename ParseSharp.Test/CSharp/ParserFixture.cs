@@ -1,4 +1,3 @@
-using System.Linq;
 using static ParseSharp.Parser;
 
 namespace ParseSharp.Test.CSharp
@@ -9,45 +8,29 @@ namespace ParseSharp.Test.CSharp
 
         public ParserFixture()
         {
-            var whitespace =
-                OneOrMore(
-                    Match(' ')
-                    .Or(Match('\t'))
-                    .Or(Match('\n'))
-                    .Or(Match('\r')));
+            var plus = Token("+");
+            var minus = Token("-");
+            var star = Token("*");
+            var div = Token("/");
 
-            Parser<(string Lexeme, ParserPosition Position)> OperatorParser(string op)
-                => Match(op).Map((lexeme, position) => (lexeme, position)).Skip(whitespace);
-
-            var minus = OperatorParser("-");
-            var plus = OperatorParser("+");
-            var star = OperatorParser("*");
-
-            var integer = OneOrMore(Match('0', '9'));
-
-            var intExpression =
-                integer.Map<Expression>((lexeme, position) =>
-                    new IntExpression(int.Parse(lexeme), position))
-                .Skip(whitespace);
-
-            Parser<Expression> BinExpressionParser(
-                Parser<Expression> expression,
-                Parser<(string Lexeme, ParserPosition Position)> @operator
-            ) =>
-                expression.Bind(first =>
-                    ZeroOrMore(@operator.Bind(op =>
-                        expression.Map(right =>
-                            (op, right))))
-                    .Map(expressions => expressions.Aggregate(first, (left, opRight) =>
-                        new BinExpression(left, opRight.op.Lexeme, opRight.right, opRight.op.Position))));
+            var factor = Token(OneOrMore(Match('0', '9'))).Map<Expression>(token =>
+                new IntExpression(int.Parse(token.Value), token.position));
 
             var timesExpression = Forward<Expression>();
 
-            var plusExpression = BinExpressionParser(timesExpression, plus.Or(minus));
+            var plusExpression = BinaryExpression(
+                timesExpression,
+                plus.Or(minus),
+                (left, op, right, position) => new BinExpression(left, op, right, position)
+            );
 
-            timesExpression.Attach(BinExpressionParser(intExpression, star));
+            timesExpression.Attach(BinaryExpression(
+                factor,
+                star.Or(div),
+                (left, op, right, position) => new BinExpression(left, op, right, position))
+            );
 
-            Parser = Optional(whitespace).And(plusExpression).Map<Ast>(expr => expr);
+            Parser = Optional(Whitespace).And(plusExpression).Map<Ast>(expr => expr);
         }
     }
 }
