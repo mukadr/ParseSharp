@@ -4,7 +4,7 @@ namespace ParseSharp
 {
     public class Parser<T>
     {
-        internal Func<ParserInput, ParserResult<T>?> Parse { get; }
+        internal Func<ParserInput, ParserResult<T>?> Parse { get; private set; }
 
         internal Parser(Func<ParserInput, ParserResult<T>?> parseFunc)
         {
@@ -19,6 +19,11 @@ namespace ParseSharp
                 throw new ParserException("Input text did not match.");
             }
             return result.Value;
+        }
+
+        public void Attach(Parser<T> parser)
+        {
+            Parse = parser.Parse;
         }
 
         public Parser<U> Bind<U>(Func<T, Parser<U>> nextParser)

@@ -6,6 +6,9 @@ namespace ParseSharp
 {
     public static class ParserFactory
     {
+        public static Parser<T> Forward<T>()
+            => new Parser<T>(input => throw new ParserException("Forward parser should not be called."));
+
         public static Parser<T> Constant<T>(T value)
             => new Parser<T>(input => new ParserResult<T>(value, input));
 

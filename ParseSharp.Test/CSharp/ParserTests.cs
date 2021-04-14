@@ -21,5 +21,13 @@ namespace ParseSharp.Test.CSharp
             Assert.Equal(135, intExpression.Value);
             Assert.Equal(3, intExpression.Position!.Value.Line);
         }
+
+        [Fact]
+        public void Parser_Accepts_BinaryExpression()
+        {
+            var ast = _Parser.ParseAllText("10 + 3 * 5");
+
+            Assert.IsType<BinExpression>(ast);
+        }
     }
 }
