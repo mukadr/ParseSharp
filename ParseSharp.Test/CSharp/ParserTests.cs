@@ -4,17 +4,17 @@ namespace ParseSharp.Test.CSharp
 {
     public class ParserTests : IClassFixture<ParserFixture>
     {
-        private readonly Parser<Ast> _Parser;
+        private readonly Parser<Ast> _parser;
 
         public ParserTests(ParserFixture fixture)
         {
-            _Parser = fixture.Parser;
+            _parser = fixture.Parser;
         }
 
         [Fact]
         public void Parser_Accepts_IntegerExpression()
         {
-            var ast = _Parser.ParseAllText("\r\n\r\n\t 135 \r\n");
+            var ast = _parser.ParseAllText("\r\n\r\n\t 135 \r\n");
 
             var intExpression = Assert.IsType<IntExpression>(ast);
 
@@ -25,7 +25,7 @@ namespace ParseSharp.Test.CSharp
         [Fact]
         public void Parser_Accepts_VarExpression()
         {
-            var ast = _Parser.ParseAllText("\r\n\r\n\t D3adB33f \r\n");
+            var ast = _parser.ParseAllText("\r\n\r\n\t D3adB33f \r\n");
 
             var varExpression = Assert.IsType<VarExpression>(ast);
 
@@ -36,7 +36,7 @@ namespace ParseSharp.Test.CSharp
         [Fact]
         public void Parser_Accepts_BinaryExpression()
         {
-            var ast = _Parser.ParseAllText("x + 3 * y");
+            var ast = _parser.ParseAllText("x + 3 * y");
 
             var bin = Assert.IsType<BinExpression>(ast);
             Assert.Equal("+", bin.Op);
