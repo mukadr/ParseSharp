@@ -13,8 +13,18 @@ namespace ParseSharp.Test.CSharp
             var star = Token("*");
             var div = Token("/");
 
-            var factor = Token(OneOrMore(Match('0', '9'))).Map<Expression>(token =>
-                new IntExpression(int.Parse(token.Value), token.position));
+            var digit = Match('0', '9');
+            var letter = Match('a', 'z').Or(Match('A', 'Z'));
+
+            var number =
+                Token(OneOrMore(digit))
+                .Map<Expression>(token => new IntExpression(int.Parse(token.Value), token.position));
+
+            var variable =
+                Token(letter.Bind(l => ZeroOrMore(letter.Or(digit)).Map(ld => l + ld)))
+                .Map<Expression>(token => new VarExpression(token.Value, token.position));
+
+            var factor = number.Or(variable);
 
             var timesExpression = Forward<Expression>();
 

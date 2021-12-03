@@ -32,4 +32,15 @@ namespace ParseSharp.Test.CSharp
             Position = position;
         }
     }
+
+    public class VarExpression : Expression
+    {
+        public string Name { get; }
+
+        public VarExpression(string name, ParserPosition? position = null)
+        {
+            Name = name;
+            Position = position;
+        }
+    }
 }

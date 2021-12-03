@@ -23,15 +23,26 @@ namespace ParseSharp.Test.CSharp
         }
 
         [Fact]
+        public void Parser_Accepts_VarExpression()
+        {
+            var ast = _Parser.ParseAllText("\r\n\r\n\t D3adB33f \r\n");
+
+            var varExpression = Assert.IsType<VarExpression>(ast);
+
+            Assert.Equal("D3adB33f", varExpression.Name);
+            Assert.Equal(3, varExpression.Position!.Value.Line);
+        }
+
+        [Fact]
         public void Parser_Accepts_BinaryExpression()
         {
-            var ast = _Parser.ParseAllText("10 + 3 * 5");
+            var ast = _Parser.ParseAllText("x + 3 * y");
 
             var bin = Assert.IsType<BinExpression>(ast);
             Assert.Equal("+", bin.Op);
 
-            var left = Assert.IsType<IntExpression>(bin.Left);
-            Assert.Equal(10, left.Value);
+            var left = Assert.IsType<VarExpression>(bin.Left);
+            Assert.Equal("x", left.Name);
 
             var binRight = Assert.IsType<BinExpression>(bin.Right);
             Assert.Equal("*", binRight.Op);
@@ -39,8 +50,8 @@ namespace ParseSharp.Test.CSharp
             var middle = Assert.IsType<IntExpression>(binRight.Left);
             Assert.Equal(3, middle.Value);
 
-            var right = Assert.IsType<IntExpression>(binRight.Right);
-            Assert.Equal(5, right.Value);
+            var right = Assert.IsType<VarExpression>(binRight.Right);
+            Assert.Equal("y", right.Name);
         }
     }
 }
