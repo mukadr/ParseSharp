@@ -4,6 +4,6 @@ namespace ParseSharp
 {
     public class ParserException : Exception
     {
-        internal ParserException(string message) : base(message) { }
+        public ParserException(string message) : base(message) { }
     }
 }
