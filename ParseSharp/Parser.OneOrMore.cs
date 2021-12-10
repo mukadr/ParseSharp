@@ -25,24 +25,23 @@ namespace ParseSharp
                 return new ParserResult<string>(sb.ToString(), input);
             });
 
-        public static Parser<IList<T>> OneOrMore<T>(Parser<T> parser)
-            => new Parser<IList<T>>(input =>
+        public static Parser<List<T>> OneOrMore<T>(Parser<T> parser)
+            => new Parser<List<T>>(input =>
             {
-                var list = new List<T>();
-
                 var result = parser.ParseFunc(input);
                 if (result is null)
                 {
                     return null;
                 }
 
+                var list = new List<T>();
                 do
                 {
                     list.Add(result.Value);
                     input = result.Input;
                 } while ((result = parser.ParseFunc(input)) is not null);
 
-                return new ParserResult<IList<T>>(list, input);
+                return new ParserResult<List<T>>(list, input);
             });
     }
 }

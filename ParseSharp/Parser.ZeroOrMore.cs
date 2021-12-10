@@ -7,7 +7,7 @@ namespace ParseSharp
         public static Parser<string> ZeroOrMore(Parser<string> parser)
             => OneOrMore(parser).Or(Constant<string>(string.Empty));
 
-        public static Parser<IList<T>> ZeroOrMore<T>(Parser<T> parser)
-            => OneOrMore(parser).Or(Constant<IList<T>>(new List<T>()));
+        public static Parser<List<T>> ZeroOrMore<T>(Parser<T> parser)
+            => OneOrMore(parser).Or(Constant<List<T>>(new List<T>()));
     }
 }
