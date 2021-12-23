@@ -8,14 +8,13 @@ namespace ParseSharp
         public static Parser<string> OneOrMore(Parser<string> parser)
             => new Parser<string>(input =>
             {
-                var sb = new StringBuilder();
-
                 var result = parser.ParseFunc(input);
                 if (result is null)
                 {
                     return null;
                 }
 
+                var sb = new StringBuilder();
                 do
                 {
                     sb.Append(result.Value);
