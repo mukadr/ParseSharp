@@ -9,7 +9,7 @@ namespace ParseSharp
 
         internal ParserPosition Position { get; private set; }
 
-        internal bool IsEndOfInput => Position.Index >= _text.Length;
+        internal readonly bool IsEndOfInput => Position.Index >= _text.Length;
 
         internal ParserInput(string text, ParserPosition? position = null)
         {
@@ -17,7 +17,7 @@ namespace ParseSharp
             Position = position ?? ParserPosition.Start;
         }
 
-        internal ParserResult<string>? Match(char first, char last)
+        internal readonly ParserResult<string>? Match(char first, char last)
         {
             if (Position.Index < _text.Length &&
                 _text[Position.Index] >= first &&
@@ -28,7 +28,7 @@ namespace ParseSharp
             return null;
         }
 
-        internal ParserResult<string>? Match(string s, StringComparison comparisonType)
+        internal readonly ParserResult<string>? Match(string s, StringComparison comparisonType)
         {
             if (Position.Index < _text.Length - s.Length + 1)
             {
@@ -41,7 +41,7 @@ namespace ParseSharp
             return null;
         }
 
-        private ParserResult<string> CreateParserResult(string lexeme)
+        private readonly ParserResult<string> CreateParserResult(string lexeme)
         {
             var newLineCount = lexeme.Count(c => c == '\n');
             var input = new ParserInput(_text, Position.Advance(lexeme.Length, newLineCount));

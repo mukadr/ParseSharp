@@ -2,8 +2,8 @@ namespace ParseSharp
 {
     public partial class Parser<T>
     {
-        public Parser<T> Skip<U>(Parser<U> next)
-            => new Parser<T>(input =>
+        public Parser<T> Skip<U>(Parser<U> next) =>
+            new(input =>
             {
                 var result = ParseFunc(input);
                 if (result is null)

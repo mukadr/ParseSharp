@@ -5,8 +5,8 @@ namespace ParseSharp
 {
     public static partial class Parser
     {
-        public static Parser<string> OneOrMore(Parser<string> parser)
-            => new Parser<string>(input =>
+        public static Parser<string> OneOrMore(Parser<string> parser) =>
+            new(input =>
             {
                 var result = parser.ParseFunc(input);
                 if (result is null)
@@ -24,8 +24,8 @@ namespace ParseSharp
                 return new ParserResult<string>(sb.ToString(), input);
             });
 
-        public static Parser<List<T>> OneOrMore<T>(Parser<T> parser)
-            => new Parser<List<T>>(input =>
+        public static Parser<List<T>> OneOrMore<T>(Parser<T> parser) =>
+            new(input =>
             {
                 var result = parser.ParseFunc(input);
                 if (result is null)

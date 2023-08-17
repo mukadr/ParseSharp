@@ -2,7 +2,7 @@ namespace ParseSharp
 {
     public struct ParserPosition
     {
-        public static readonly ParserPosition Start = new ParserPosition(0, 1);
+        public static readonly ParserPosition Start = new(0, 1);
 
         public int Index { get; private set; }
 
@@ -14,6 +14,6 @@ namespace ParseSharp
             Line = line;
         }
 
-        public ParserPosition Advance(int charCount, int newLineCount) => new ParserPosition(Index + charCount, Line + newLineCount);
+        public readonly ParserPosition Advance(int charCount, int newLineCount) => new(Index + charCount, Line + newLineCount);
     }
 }

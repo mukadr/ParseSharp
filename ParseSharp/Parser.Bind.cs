@@ -4,8 +4,8 @@ namespace ParseSharp
 {
     public partial class Parser<T>
     {
-        public Parser<U> Bind<U>(Func<T, Parser<U>> nextParser)
-            => new Parser<U>(input =>
+        public Parser<U> Bind<U>(Func<T, Parser<U>> nextParser) =>
+            new(input =>
             {
                 var result = ParseFunc(input);
                 if (result is null)
@@ -15,8 +15,8 @@ namespace ParseSharp
                 return nextParser(result.Value).ParseFunc(result.Input);
             });
 
-        public Parser<U> Bind<U>(Func<T, ParserPosition, Parser<U>> nextParser)
-            => new Parser<U>(input =>
+        public Parser<U> Bind<U>(Func<T, ParserPosition, Parser<U>> nextParser) =>
+            new(input =>
             {
                 var result = ParseFunc(input);
                 if (result is null)

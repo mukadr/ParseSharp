@@ -4,8 +4,8 @@ namespace ParseSharp
 {
     public static partial class Parser
     {
-        public static Parser<(string Prefix, T End)> Until<T>(Parser<T> parser)
-            => new Parser<(string Prefix, T End)>(input =>
+        public static Parser<(string Prefix, T End)> Until<T>(Parser<T> parser) =>
+            new Parser<(string Prefix, T End)>(input =>
             {
                 var sb = new StringBuilder();
 
