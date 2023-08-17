@@ -5,7 +5,7 @@ using static ParseSharp.Parser;
 
 namespace ParseSharp.Test
 {
-    public class SimpleTests
+    public class ParserTest
     {
         [Fact]
         public void Parser_Throws_OnMatchFailure()
@@ -171,10 +171,10 @@ namespace ParseSharp.Test
         [Fact]
         public void Until_Accepts_WhenEndIsFound()
         {
-            var result = Until(Match('a').Bind(a => Match('b').Bind(b => Match('c').Map(c => a + b + c)))).ParseAllText("123abc");
+            var (Prefix, End) = Until(Match('a').Bind(a => Match('b').Bind(b => Match('c').Map(c => a + b + c)))).ParseAllText("123abc");
 
-            Assert.Equal("123", result.Prefix);
-            Assert.Equal("abc", result.End);
+            Assert.Equal("123", Prefix);
+            Assert.Equal("abc", End);
         }
     }
 }
