@@ -1,16 +1,15 @@
-namespace ParseSharp
+namespace ParseSharp;
+
+public static partial class Parser
 {
-    public static partial class Parser
-    {
-        public static Parser<T?> Not<T>(Parser<T> parser) where T : class =>
-            new(input =>
+    public static Parser<T?> Not<T>(Parser<T> parser) where T : class =>
+        new(input =>
+        {
+            var result = parser.ParseFunc(input);
+            if (result is null)
             {
-                var result = parser.ParseFunc(input);
-                if (result is null)
-                {
-                    return new ParserResult<T?>(null, input);
-                }
-                return null;
-            });
-    }
+                return new ParserResult<T?>(null, input);
+            }
+            return null;
+        });
 }

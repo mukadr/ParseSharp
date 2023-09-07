@@ -1,29 +1,28 @@
 using System;
 
-namespace ParseSharp
+namespace ParseSharp;
+
+public partial class Parser<T>
 {
-    public partial class Parser<T>
+    internal Func<ParserInput, ParserResult<T>?> ParseFunc { get; private set; }
+
+    internal Parser(Func<ParserInput, ParserResult<T>?> parseFunc)
     {
-        internal Func<ParserInput, ParserResult<T>?> ParseFunc { get; private set; }
+        ParseFunc = parseFunc;
+    }
 
-        internal Parser(Func<ParserInput, ParserResult<T>?> parseFunc)
+    public T ParseAllText(string text)
+    {
+        var result = ParseFunc(new ParserInput(text));
+        if (result is null || !result.Input.IsEndOfInput)
         {
-            ParseFunc = parseFunc;
+            throw new ParserException("Input text did not match.");
         }
+        return result.Value;
+    }
 
-        public T ParseAllText(string text)
-        {
-            var result = ParseFunc(new ParserInput(text));
-            if (result is null || !result.Input.IsEndOfInput)
-            {
-                throw new ParserException("Input text did not match.");
-            }
-            return result.Value;
-        }
-
-        public void Attach(Parser<T> parser)
-        {
-            ParseFunc = parser.ParseFunc;
-        }
+    public void Attach(Parser<T> parser)
+    {
+        ParseFunc = parser.ParseFunc;
     }
 }

@@ -1,23 +1,22 @@
-namespace ParseSharp
+namespace ParseSharp;
+
+public partial class Parser<T>
 {
-    public partial class Parser<T>
-    {
-        public Parser<T> Skip<U>(Parser<U> next) =>
-            new(input =>
+    public Parser<T> Skip<U>(Parser<U> next) =>
+        new(input =>
+        {
+            var result = ParseFunc(input);
+            if (result is null)
             {
-                var result = ParseFunc(input);
-                if (result is null)
-                {
-                    return result;
-                }
+                return result;
+            }
 
-                var consumed = next.ParseFunc(result.Input);
-                if (consumed is null)
-                {
-                    return result;
-                }
+            var consumed = next.ParseFunc(result.Input);
+            if (consumed is null)
+            {
+                return result;
+            }
 
-                return new ParserResult<T>(result.Value, consumed.Input);
-            });
-    }
+            return new ParserResult<T>(result.Value, consumed.Input);
+        });
 }

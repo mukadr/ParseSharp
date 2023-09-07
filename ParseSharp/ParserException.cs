@@ -1,9 +1,8 @@
 using System;
 
-namespace ParseSharp
+namespace ParseSharp;
+
+public class ParserException : Exception
 {
-    public class ParserException : Exception
-    {
-        public ParserException(string message) : base(message) { }
-    }
+    public ParserException(string message) : base(message) { }
 }
